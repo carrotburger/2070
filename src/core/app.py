@@ -15,7 +15,7 @@ class App:
         self.display_surface = pygame.display.set_mode((0, 0), pygame.FULLSCREEN)
         self.screen = pygame.Surface((SCREEN_WIDTH, SCREEN_HEIGHT))
         self.clock = pygame.time.Clock()
-        self.coordinator = Coordinator(ResolutionHandler((SCREEN_WIDTH, SCREEN_HEIGHT)))
+        self.coordinator = Coordinator(self.screen, ResolutionHandler((SCREEN_WIDTH, SCREEN_HEIGHT)))
         self.current_scene = self.coordinator.next_scene(SceneTag.MAIN_MENU)
         self.running = True
 
