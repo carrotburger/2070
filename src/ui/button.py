@@ -1,4 +1,5 @@
 import pygame
+from typing import Tuple
 
 class Button:
     def __init__(self, x: int, y: int, width: int, height: int, text: str):
@@ -11,12 +12,12 @@ class Button:
         self.font = pygame.font.SysFont(None, 24)
         self.is_hovered = False
 
-    def check_click(self, pos):
+    def check_click(self, pos: Tuple[float, float]):
         if self.rect.collidepoint(pos):
             return True
         return False
 
-    def check_hover(self, pos):
+    def check_hover(self, pos: Tuple[float, float]):
         if self.rect.collidepoint(pos):
             if not self.is_hovered:
                 pygame.mouse.set_cursor(pygame.SYSTEM_CURSOR_HAND)
