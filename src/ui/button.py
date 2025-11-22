@@ -1,7 +1,7 @@
 import pygame
 from typing import Tuple
 
-from src.config.text import FONT_SIZE
+from src.config.text import FONT_SIZE_36
 from src.core.sources import load_sound
 from src.ui.colors import BUTTON_PRESSED_COLOR, BUTTON_COLOR, BUTTON_HOVER_COLOR, BUTTON_BORDER_COLOR, BUTTON_TEXT_COLOR
 
@@ -32,7 +32,7 @@ class Button:
         self.text_color = text_color
         self.hover_sound = load_sound(hover_sfx_path)
         self.click_sound = load_sound(click_sfx_path)
-        self.font = pygame.font.SysFont(None, FONT_SIZE)
+        self.font = pygame.font.SysFont(None, FONT_SIZE_36)
         self.is_hovered = False
 
     def check_click(self, pos: Tuple[float, float]) -> bool:

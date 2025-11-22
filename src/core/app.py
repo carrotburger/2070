@@ -12,7 +12,7 @@ class App:
     def __init__(self):
         pygame.init()
         pygame.display.set_caption(APP_TITLE)
-        self.display_surface = pygame.display.set_mode((0, 0), pygame.FULLSCREEN)
+        self.display_surface = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT), pygame.FULLSCREEN)
         self.screen = pygame.Surface((SCREEN_WIDTH, SCREEN_HEIGHT))
         self.clock = pygame.time.Clock()
         self.coordinator = Coordinator(self.screen, ResolutionHandler((SCREEN_WIDTH, SCREEN_HEIGHT)))
