@@ -1,1 +1,1 @@
-FONT_SIZE = 24
+FONT_SIZE = 36

@@ -1,4 +1,4 @@
-from enum import Enum, unique
+import pygame
 
 from src.core.resolution import ResolutionHandler
 from src.scenes.class_room import ClassRoom
@@ -8,8 +8,9 @@ from src.scenes.scene_tag import SceneTag
 
 
 class Coordinator:
-    def __init__(self, resolution_handler: ResolutionHandler):
+    def __init__(self, screen: pygame.Surface, resolution_handler: ResolutionHandler):
         self.resolution_handler = resolution_handler
+        self.screen = screen
 
     def next_scene(self, tag: SceneTag) -> Scene:
         match tag:
@@ -20,5 +21,5 @@ class Coordinator:
             case SceneTag.MAIN_MENU:
                 return MainMenu()
             case SceneTag.CLASS_ROOM:
-                return ClassRoom(self.resolution_handler)
+                return ClassRoom(self.screen, self.resolution_handler)
         return MainMenu()
