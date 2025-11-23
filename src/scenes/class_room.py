@@ -49,12 +49,14 @@ class ClassRoom(Scene):
         self.dialog_panel.set_is_active(True)
 
     def handle_events(self, events: List[pygame.event.Event]) -> Handled | NextScene | TerminateApp:
+        # 1) ダイアログが出ているときは、ダイアログだけイベント処理
         if self.dialog_panel.text_height:
             if self.dialog_panel.handle_event(events):
                 self.dialog_panel.set_is_active(False)
                 self.overlay = None
             return Handled()
 
+        # 2) ダイアログが出ていないときは、先生クリックなどを処理
         for event in events:
             if event.type == pygame.QUIT:
                 return TerminateApp()
@@ -65,8 +67,11 @@ class ClassRoom(Scene):
                     self.on_area_click("kek")
             if event.type == pygame.VIDEORESIZE:
                 self.resolution_handler.update_resolution((event.w, event.h))
-                self.background = pygame.transform.scale(self.background,
-                                                         self.resolution_handler.get_scaled_resolution())
+                self.background = pygame.transform.scale(
+                    self.background,
+                    self.resolution_handler.get_scaled_resolution()
+                )
+
         return Handled()
 
     def draw(self, screen: pygame.Surface):
