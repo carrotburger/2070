@@ -5,6 +5,7 @@ import pygame
 from src.config.text import FONT_SIZE_36
 from src.core.sources import load_sound
 from src.core.text import split_text_on_lines, measure_multiline_text
+from src.dialogs.dialog import BaseDialog, DialogOption, DialogOptionType
 from src.ui.colors import SURFACE_BACKGROUND, DIALOG_BORDER_COLOR, DEFAULT_TEXT_COLOR
 from src.ui.phrase import Phrase
 
@@ -34,6 +35,7 @@ class DialogPanel:
         self.option_click_sound = load_sound(option_hover_sfx)
 
         self.hovered_index: Optional[int] = None
+        self.dialog: None | BaseDialog = None
 
     def set_is_active(self, is_active: bool):
         self.is_active = is_active
@@ -47,8 +49,14 @@ class DialogPanel:
         self.text_height = 0
         self.options.clear()
         self.hovered_index = None
+        self.dialog = None
 
-    def set_content(self, text: str, options: List[str]):
+    def set_dialog(self, dialog: BaseDialog):
+        self.dialog = dialog
+        self.set_is_active(True)
+        self.set_content(dialog.current_text(), dialog.current_options())
+
+    def set_content(self, text: str, options: List[DialogOption]):
         lines = split_text_on_lines(text, self.font, self.rect.width - 2 * self.padding)
         self.text_height = measure_multiline_text(lines, self.font, self.padding, self.line_spacing) + self.padding
         self.text_surface = pygame.Surface((self.rect.width, self.text_height), pygame.SRCALPHA)
@@ -61,9 +69,9 @@ class DialogPanel:
 
         self.options = []
         for option in options:
-            self.options.append(Phrase(option, self.rect.width, self.padding, self.line_spacing))
+            self.options.append(Phrase(option.text, self.rect.width, self.padding, self.line_spacing))
 
-    def handle_event(self, events: List[pygame.event.Event]) -> str | None:
+    def handle_event(self, events: List[pygame.event.Event]) -> bool:
         for event in events:
             if event.type == pygame.MOUSEMOTION:
                 current_y = self.text_height
@@ -75,16 +83,22 @@ class DialogPanel:
                             break
                     current_y += phrase.height
 
-                return None
+                return False
             if event.type == pygame.MOUSEBUTTONDOWN:
                 current_y = self.text_height
-                for option in self.options:
+                for idx, option in enumerate(self.options):
                     if option.collidepoint(event.pos, self.rect.x, current_y):
+                        dialog = self.dialog
                         pygame.mixer.Sound(self.option_click_sound).play()
-                        return "1"
+                        if dialog.current_options()[idx].type == DialogOptionType.TERMINAL:
+                            return True
+                        else:
+                            dialog.select_option(idx)
+                            self.set_content(dialog.current_text(), dialog.current_options())
+
                     current_y += option.height
 
-        return None
+        return False
 
     def draw(self, screen: pygame.Surface):
         pygame.draw.rect(screen, SURFACE_BACKGROUND, self.rect)
