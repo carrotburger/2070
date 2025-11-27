@@ -28,13 +28,13 @@ class ClassRoom(Scene):
         dialog_rec = relative_rect(screen, 0.70, 0.0, 0.28, 1.0)
         self.dialog_panel = DialogPanel(dialog_rec.x, dialog_rec.y, dialog_rec.width, dialog_rec.height,
                                         padding=12, line_spacing=4, option_hover_sfx="option_hover.mp3")
-        self.character = None
+        self.focused_object = None
         self.overlay = None
-        self.transition_target = None
 
     def on_area_click(self, area_id: str):
         pygame.mouse.set_cursor(pygame.SYSTEM_CURSOR_ARROW)
-        self.character = Interactable(area_id)
+        self.focused_object = load_image("character/old_teacher.png")
+        self.focused_object = pygame.transform.scale(self.focused_object, self.resolution_handler.get_scaled_resolution())
         overlay_surface = pygame.Surface(self.screen.get_size(), pygame.SRCALPHA)
         overlay_surface.fill((0, 0, 0, 128))
         self.overlay = overlay_surface
@@ -53,6 +53,7 @@ class ClassRoom(Scene):
         if self.dialog_panel.text_height:
             if self.dialog_panel.handle_event(events):
                 self.dialog_panel.set_is_active(False)
+                self.focused_object = None
                 self.overlay = None
             return Handled()
 
@@ -74,9 +75,12 @@ class ClassRoom(Scene):
 
         return Handled()
 
+
     def draw(self, screen: pygame.Surface):
         screen.blit(self.background, (0, 0))
         if self.overlay:
             screen.blit(self.overlay, (0, 0))
+        if self.focused_object:
+            screen.blit(self.focused_object, (0, 0))
         if self.dialog_panel.is_active:
             self.dialog_panel.draw(screen)

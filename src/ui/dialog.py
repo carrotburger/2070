@@ -3,7 +3,7 @@ from typing import List, Optional
 import pygame
 
 from src.config.text import FONT_SIZE_36
-from src.core.sources import load_sound, load_image
+from src.core.sources import load_sound
 from src.core.text import split_text_on_lines, measure_multiline_text
 from src.ui.colors import SURFACE_BACKGROUND, DIALOG_BORDER_COLOR, DEFAULT_TEXT_COLOR
 from src.ui.phrase import Phrase
@@ -47,9 +47,6 @@ class DialogPanel:
         self.text_height = 0
         self.options.clear()
         self.hovered_index = None
-
-    def set_object_image(self, path: str):
-        self.object_image = load_image(path)
 
     def set_content(self, text: str, options: List[str]):
         lines = split_text_on_lines(text, self.font, self.rect.width - 2 * self.padding)
