@@ -2,6 +2,8 @@ import pygame
 
 from src.config.display import TARGET_FPS
 from src.core.resolution import ResolutionHandler
+from src.core.sources import Resources
+from src.repositories.consequences import ConsequencesRepository
 from src.scenes.coordinator import Coordinator, SceneTag
 from src.scenes.scene import NextScene, TerminateApp
 
@@ -23,7 +25,10 @@ class App:
         )
         self.clock = pygame.time.Clock()
         self.coordinator = Coordinator(
-            self.display_surface, ResolutionHandler((self.width, self.height))
+            self.display_surface,
+            ResolutionHandler((self.width, self.height)),
+            Resources(),
+            ConsequencesRepository(),
         )
 
         # ★ 追加：今どのシーンかをタグで持つ
@@ -75,5 +80,3 @@ class App:
             pygame.display.flip()
 
         pygame.quit()
-
-        
